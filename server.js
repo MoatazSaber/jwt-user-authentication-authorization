@@ -16,6 +16,10 @@ if (cluster.isMaster) {
   for (let i = 0; i < cpuCount; i++) {
     cluster.fork();
   }
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died.`);
+    cluster.fork();
+  });
 } else {
   app.listen(process.env.PORT || 3000, () =>
     console.log(
